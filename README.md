@@ -33,7 +33,7 @@ The autoencoder is trained using the [Fashion MNIST](https://github.com/zalandor
 
 * ``train_conv_autoencoder.py``: trains the autoencoder model on the [Fashion MNIST](https://github.com/zalandoresearch/fashion-mnist) dataset, and saves the weights and parameters of the model under ``model`` directory in the project folder.
 
-* ``generator.py``: loads the saved model and runs it on a random sample from the test set to generate simiar images, and plots their latent representations.
+* ``generator.py``: loads the saved model and runs it on a random sample from the test set to generate similar images, and plots their latent representations.
 
 ## Installation
 
