@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from conv_autoencoder import Autoencoder
-from train_conv_autoencoder import load_mnist
+from train_conv_autoencoder import load_mnist, load_fashion_mnist
 
 
 def select_images(images, labels, num_images=10):
@@ -41,7 +41,7 @@ def plot_images_encoded_in_latent_space(latent_representations, sample_labels):
 
 if __name__ == "__main__":
     autoencoder = Autoencoder.load("model")
-    x_train, y_train, x_test, y_test = load_mnist()
+    x_train, y_train, x_test, y_test = load_fashion_mnist()#load_mnist()
 
     num_sample_images_to_show = 8
     sample_images, _ = select_images(x_test, y_test, num_sample_images_to_show)

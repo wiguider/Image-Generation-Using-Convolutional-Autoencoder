@@ -1,4 +1,4 @@
-from tensorflow.keras.datasets import mnist
+from tensorflow.keras.datasets import mnist, fashion_mnist
 
 from conv_autoencoder import Autoencoder
 
@@ -10,6 +10,16 @@ EPOCHS = 100
 
 def load_mnist():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+    x_train = x_train.astype("float32") / 255
+    x_train = x_train.reshape(x_train.shape + (1,))
+    x_test = x_test.astype("float32") / 255
+    x_test = x_test.reshape(x_test.shape + (1,))
+
+    return x_train, y_train, x_test, y_test
+
+def load_fashion_mnist():
+    (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
 
     x_train = x_train.astype("float32") / 255
     x_train = x_train.reshape(x_train.shape + (1,))
@@ -34,6 +44,6 @@ def train(x_train, learning_rate, batch_size, epochs):
 
 
 if __name__ == "__main__":
-    x_train, _, _, _ = load_mnist()
-    autoencoder = train(x_train[:10000], LEARNING_RATE, BATCH_SIZE, EPOCHS)
+    x_train, _, _, _ = load_fashion_mnist()
+    autoencoder = train(x_train[:100000], LEARNING_RATE, BATCH_SIZE, EPOCHS)
     autoencoder.save("model")

@@ -151,7 +151,7 @@ class Autoencoder:
 
     def _add_decoder_output(self, x):
         conv_transpose_layer = Conv2DTranspose(
-            filters=1,
+            filters=self.input_shape[-1],
             kernel_size=self.conv_kernels[0],
             strides=self.conv_strides[0],
             padding="same",
