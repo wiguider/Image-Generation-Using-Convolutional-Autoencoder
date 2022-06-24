@@ -6,6 +6,7 @@
 
 <p align="center">
   <img src="https://blog.keras.io/img/ae/autoencoder_schema.jpg">
+  <br>
   (Image source <a href="https://blog.keras.io/building-autoencoders-in-keras.html"> Keras</a>)
 </p>
 
