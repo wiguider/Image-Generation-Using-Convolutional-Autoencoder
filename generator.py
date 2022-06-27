@@ -3,7 +3,7 @@ import numpy as np
 
 from conv_autoencoder import VAE
 from train_conv_autoencoder import load_fashion_mnist
-import tensorflow as tf
+
 
 def select_images(images, labels, num_images=10):
     """selects a random sample from the given images.
@@ -69,8 +69,6 @@ if __name__ == "__main__":
     sample_images, _ = select_images(x_test, y_test, num_sample_images_to_show)
     reconstructed_images, _ = autoencoder.reconstruct(sample_images)
     plot_reconstructed_images(sample_images, reconstructed_images)
-    mse = tf.keras.losses.MeanSquaredError()
-    print(mse(sample_images, reconstructed_images))
 
     num_images = 6000
     sample_images, sample_labels = select_images(x_test, y_test, num_images)
