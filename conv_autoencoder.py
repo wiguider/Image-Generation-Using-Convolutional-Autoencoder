@@ -1,13 +1,16 @@
 import os
 import pickle
 
-from tensorflow.keras import Model
-from tensorflow.keras.layers import Input, Conv2D, ReLU, BatchNormalization, \
-    Flatten, Dense, Reshape, Conv2DTranspose, Activation
-from tensorflow.keras import backend as K
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import MeanSquaredError
 import numpy as np
+import tensorflow as tf
+from tensorflow.keras import Model, backend as K
+from tensorflow.keras.layers import Activation, BatchNormalization, Conv2D, Conv2DTranspose, Dense, Flatten, Input, Lambda, ReLU, Reshape
+from tensorflow.keras.losses import MeanSquaredError
+from tensorflow.keras.optimizers import Adam
+
+# eager execution enables Tensorflow to evaluate operations before the graph si completely built
+# This implementation does not work with eager execution
+tf.compat.v1.disable_eager_execution()
 
 
 class Autoencoder:
@@ -22,11 +25,11 @@ class Autoencoder:
                  conv_kernels,
                  conv_strides,
                  latent_space_dim):
-        self.input_shape = input_shape # [28, 28, 1]
-        self.conv_filters = conv_filters # [2, 4, 8]
-        self.conv_kernels = conv_kernels # [3, 5, 3]
-        self.conv_strides = conv_strides # [1, 2, 2]
-        self.latent_space_dim = latent_space_dim # 2
+        self.input_shape = input_shape  # [28, 28, 1]
+        self.conv_filters = conv_filters  # [2, 4, 8]
+        self.conv_kernels = conv_kernels  # [3, 5, 3]
+        self.conv_strides = conv_strides  # [1, 2, 2]
+        self.latent_space_dim = latent_space_dim  # 2
 
         self.encoder = None
         self.decoder = None
@@ -223,7 +226,7 @@ class Autoencoder:
             decoder_input (tensor): Input of the decoder
 
         """
-        num_neurons = np.prod(self._shape_before_bottleneck) # [1, 2, 4] -> 8
+        num_neurons = np.prod(self._shape_before_bottleneck)  # [1, 2, 4] -> 8
         dense_layer = Dense(num_neurons, name="decoder_dense")(decoder_input)
         return dense_layer
 
@@ -252,11 +255,11 @@ class Autoencoder:
         """
         layer_num = self._num_conv_layers - layer_index
         conv_transpose_layer = Conv2DTranspose(
-            filters=self.conv_filters[layer_index],
-            kernel_size=self.conv_kernels[layer_index],
-            strides=self.conv_strides[layer_index],
-            padding="same",
-            name=f"decoder_conv_transpose_layer_{layer_num}"
+                filters=self.conv_filters[layer_index],
+                kernel_size=self.conv_kernels[layer_index],
+                strides=self.conv_strides[layer_index],
+                padding="same",
+                name=f"decoder_conv_transpose_layer_{layer_num}"
         )
         x = conv_transpose_layer(x)
         x = ReLU(name=f"decoder_relu_{layer_num}")(x)
@@ -273,11 +276,11 @@ class Autoencoder:
             tensor: The graph of layers in the decoder plus the output layer.
         """
         conv_transpose_layer = Conv2DTranspose(
-            filters=self.input_shape[-1],
-            kernel_size=self.conv_kernels[0],
-            strides=self.conv_strides[0],
-            padding="same",
-            name=f"decoder_conv_transpose_layer_{self._num_conv_layers}"
+                filters=self.input_shape[-1],
+                kernel_size=self.conv_kernels[0],
+                strides=self.conv_strides[0],
+                padding="same",
+                name=f"decoder_conv_transpose_layer_{self._num_conv_layers}"
         )
         x = conv_transpose_layer(x)
         output_layer = Activation("sigmoid", name="sigmoid_layer")(x)
@@ -313,11 +316,11 @@ class Autoencoder:
         """
         layer_number = layer_index + 1
         conv_layer = Conv2D(
-            filters=self.conv_filters[layer_index],
-            kernel_size=self.conv_kernels[layer_index],
-            strides=self.conv_strides[layer_index],
-            padding="same",
-            name=f"encoder_conv_layer_{layer_number}"
+                filters=self.conv_filters[layer_index],
+                kernel_size=self.conv_kernels[layer_index],
+                strides=self.conv_strides[layer_index],
+                padding="same",
+                name=f"encoder_conv_layer_{layer_number}"
         )
         x = conv_layer(x)
         x = ReLU(name=f"encoder_relu_{layer_number}")(x)
@@ -332,12 +335,90 @@ class Autoencoder:
         return x
 
 
+class VAE(Autoencoder):
+    """
+    VAE represents a Deep Convolutional variational autoencoder architecture
+    with mirrored encoder and decoder components.
+
+    The architecture of VAE is similar to the one of Autoencoder,
+    but, the samples are mapped in a different way hence the loss function is different.
+    More precisely, rather than mapping input data to points in the latent space,
+    VAE maps input data to parameters of a distribution that describe where a
+    datum “should” be mapped (probabilistically) in the latent space, according to its features.
+
+    """
+
+    def __init__(self, input_shape, conv_filters, conv_kernels, conv_strides, latent_space_dim):
+        self.reconstruction_loss_weight = 1000
+
+        super().__init__(input_shape, conv_filters, conv_kernels, conv_strides, latent_space_dim)
+
+        self._build()
+
+    def _calculate_combined_loss(self, y_target, y_predicted):
+        """
+         combines reconstruction loss and KLDivergence.
+         combined_loss = reconstruction_loss_weight * reconstruction_loss + kl_loss
+        """
+        reconstruction_loss = tf.keras.losses.MeanSquaredError()(y_target, y_predicted)
+        kl_loss = tf.keras.losses.KLDivergence()(y_target, y_predicted)
+
+        combined_loss = self.reconstruction_loss_weight * reconstruction_loss \
+                        - kl_loss
+        return combined_loss
+
+    def compile(self, learning_rate=0.0001):
+        """
+        Configures the model for training.
+
+        Args:
+            learning_rate (float, optional): The learning rate of the optimizer.
+            Defaults to 0.0001.
+        """
+        optimizer = Adam(learning_rate=learning_rate)
+        # The loss function is a combination of reconstruction loss and KLDivergence
+        self.model.compile(optimizer=optimizer,
+                           loss=self._calculate_combined_loss,
+                           metrics=['MeanSquaredError', 'KLDivergence'])
+
+    def _add_bottleneck(self, x):
+        """Flatten data and add bottleneck with Guassian sampling (Dense
+        layer).
+        """
+        self._shape_before_bottleneck = K.int_shape(x)[1:]
+        x = Flatten()(x)
+
+        # We calculate the mean of our multivariate Gaussian in the latent space.
+        self.mu = Dense(self.latent_space_dim, name="mu")(x)
+        # We calculate the variances of the same Gaussian's diagonal log covariance matrix.
+        self.log_variance = Dense(self.latent_space_dim,
+                                  name="log_variance")(x)
+
+        def sample_point_from_normal_distribution(args):
+            """
+            Given mu and log_variance, defines another random variable ’epsilon’ that maintains stochasticity
+            via a Hadamard product of the log variance vector with a vector whose components
+            are independently sampled from a standard normal distribution, and calculates the sampled point
+            from the normal distribution for each input data.
+            """
+
+            mu, log_variance = args
+            epsilon = K.random_normal(shape=K.shape(self.mu), mean=0.,
+                                      stddev=1.)
+            sampled_point = mu + K.exp(log_variance / 2) * epsilon
+            return sampled_point
+
+        x = Lambda(sample_point_from_normal_distribution,
+                   name="encoder_output")([self.mu, self.log_variance])
+        return x
+
+
 if __name__ == "__main__":
-    autoencoder = Autoencoder(
-        input_shape=(28, 28, 1), # shape of the images in the dataset
-        conv_filters=(32, 64, 64, 64),# number of filters in each convolutional layer
-        conv_kernels=(3, 3, 3, 3),# number of kernels in each convolutional layer
-        conv_strides=(1, 2, 2, 1),# number fo strides in each convolutional layer
-        latent_space_dim=2 # dimension of the latent space
+    autoencoder = VAE(
+            input_shape=(28, 28, 1),  # shape of the images in the dataset
+            conv_filters=(32, 64, 64, 64),  # number of filters in each convolutional layer
+            conv_kernels=(3, 3, 3, 3),  # number of kernels in each convolutional layer
+            conv_strides=(1, 2, 2, 1),  # number fo strides in each convolutional layer
+            latent_space_dim=2  # dimension of the latent space
     )
     autoencoder.summary()
