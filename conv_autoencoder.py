@@ -222,8 +222,6 @@ class Autoencoder:
         Args:
             decoder_input (tensor): Input of the decoder
 
-        Returns:
-            _type_: _description_
         """
         num_neurons = np.prod(self._shape_before_bottleneck) # [1, 2, 4] -> 8
         dense_layer = Dense(num_neurons, name="decoder_dense")(decoder_input)
