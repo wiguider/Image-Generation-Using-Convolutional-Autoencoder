@@ -144,7 +144,7 @@ class Autoencoder:
         parameters_path = os.path.join(folder_path, "parameters.pkl")
         with open(parameters_path, "rb") as f:
             parameters = pickle.load(f)
-        autoencoder = Autoencoder(*parameters)
+        autoencoder = cls(*parameters)
         weights_path = os.path.join(folder_path, "weights.h5")
         autoencoder.load_weights(weights_path)
         return autoencoder
