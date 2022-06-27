@@ -6,6 +6,16 @@ from train_conv_autoencoder import load_mnist, load_fashion_mnist
 
 
 def select_images(images, labels, num_images=10):
+    """selects a random sample from the given images.
+
+    Args:
+        images (Input images): List of 3d numpy arrays representing the images.
+        labels (Input labels): List of the labels corresponding to the images.
+        num_images (int, optional): Number of the images in the sample. Defaults to 10.
+
+    Returns:
+        tuple: sample_images, sample_labels
+    """
     sample_images_index = np.random.choice(range(len(images)), num_images)
     sample_images = images[sample_images_index]
     sample_labels = labels[sample_images_index]
@@ -13,6 +23,12 @@ def select_images(images, labels, num_images=10):
 
 
 def plot_reconstructed_images(images, reconstructed_images):
+    """Plots the original images and the ones reconstructed by the autoencoder.
+
+    Args:
+        images (Input images): List of 3d numpy arrays representing the original images.
+        reconstructed_images (Reconstucted Images): List of 3d numpy arrays representing the images reconstructed by the autoencoder.
+    """
     fig = plt.figure(figsize=(15, 3))
     num_images = len(images)
     for i, (image, reconstructed_image) in enumerate(zip(images, reconstructed_images)):
@@ -28,6 +44,12 @@ def plot_reconstructed_images(images, reconstructed_images):
 
 
 def plot_images_encoded_in_latent_space(latent_representations, sample_labels):
+    """Plots the latent representations of the images.
+
+    Args:
+        latent_representations (List): latent representations of the images-
+        sample_labels (List): labels of the images.
+    """
     plt.figure(figsize=(10, 10))
     plt.scatter(latent_representations[:, 0],
                 latent_representations[:, 1],

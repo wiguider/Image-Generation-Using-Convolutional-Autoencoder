@@ -31,11 +31,11 @@ def load_fashion_mnist():
 
 def train(x_train, learning_rate, batch_size, epochs):
     autoencoder = Autoencoder(
-        input_shape=(28, 28, 1),
-        conv_filters=(32, 64, 64, 64),
-        conv_kernels=(3, 3, 3, 3),
-        conv_strides=(1, 2, 2, 1),
-        latent_space_dim=2
+        input_shape=(28, 28, 1),# shape of the images in the dataset
+        conv_filters=(32, 64, 64, 64),# number of filters in each convolutional layer
+        conv_kernels=(3, 3, 3, 3),# number of kernels in each convolutional layer
+        conv_strides=(1, 2, 2, 1),# number fo strides in each convolutional layer
+        latent_space_dim=2# dimension of the latent space
     )
     autoencoder.summary()
     autoencoder.compile(learning_rate)
