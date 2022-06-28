@@ -22,8 +22,10 @@ Variational Autoencoders extend the core concept of Autoencoders by placing cons
 
 This project introduces an example of a ``convolutional (variational) autoencoder`` that reads an input image, encodes the image into a lower dimensional latent representation, then decodes the latent representation to reconstruct the imput image.
 The autoencoder is implemented using the [Keras](https://keras.io/), and it is based on convolutional neural networks leveraging [Conv2D](https://keras.io/api/layers/convolution_layers/convolution2d/) layers in the ``encoder``, and [Conv2DTranspose](https://keras.io/api/layers/convolution_layers/convolution2d_transpose/) layers in the ``decoder``.
-The autoencoder is trained using the [Fashion MNIST](https://github.com/zalandoresearch/fashion-mnist) dataset. Each image in this dataset is 28x28 pixels. For this reason, the input shape of the ``encoder`` was set to ``(28, 28, 1)`` as well as for the output shape of the ``decoder``.
+The autoencoder is trained using the `Fashion-MNIST` dataset. Each image in this dataset is 28x28 pixels. For this reason, the input shape of the ``encoder`` was set to ``(28, 28, 1)`` as well as for the output shape of the ``decoder``.
 
+## Dataset
+`Fashion-MNIST` is a dataset of [Zalando](https://jobs.zalando.com/tech/) 's article images—consisting of a training set of 60,000 examples and a test set of 10,000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes. We intend `Fashion-MNIST` to serve as a direct **drop-in replacement** for the original [MNIST dataset](http://yann.lecun.com/exdb/mnist/) for benchmarking machine learning algorithms. It shares the same image size and structure of training and testing splits.
 ## Scripts
 
 * ``conv_autoencoder.py``: contains the implementation of a Convolutional Autoencoder and a Convolutional Variational Autoencoder.
@@ -31,6 +33,7 @@ The autoencoder is trained using the [Fashion MNIST](https://github.com/zalandor
 * ``train_conv_autoencoder.py``: trains the selected autoencoder model on the [Fashion MNIST](https://github.com/zalandoresearch/fashion-mnist) dataset, and saves the weights and parameters of the model under the selected directory (in this case, the trained convolutional autoencoder is saved under ``model`` and the variational autoencoder is saved under ``variational/model``) in the project folder.
 
 * ``generator.py``: loads the saved model and runs it on a random sample from the test set to generate similar images, and plots their latent representations.
+
 
 ## Installation
 
