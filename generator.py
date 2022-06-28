@@ -66,9 +66,11 @@ if __name__ == "__main__":
     x_train, y_train, x_test, y_test = load_fashion_mnist()  # load_mnist()
 
     num_sample_images_to_show = 8
-    sample_images, _ = select_images(x_test, y_test, num_sample_images_to_show)
-    reconstructed_images, _ = autoencoder.reconstruct(sample_images)
-    plot_reconstructed_images(sample_images, reconstructed_images)
+    for i in np.arange(9):
+        idx = np.where(y_test == i)
+        sample_images, _ = select_images(x_test[idx], y_test[idx], num_sample_images_to_show)
+        reconstructed_images, _ = autoencoder.reconstruct(sample_images)
+        plot_reconstructed_images(sample_images, reconstructed_images)
 
     num_images = 6000
     sample_images, sample_labels = select_images(x_test, y_test, num_images)
