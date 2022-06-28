@@ -25,7 +25,7 @@ The autoencoder is implemented using the [Keras](https://keras.io/), and it is b
 The autoencoder is trained using the `Fashion-MNIST` dataset. Each image in this dataset is 28x28 pixels. For this reason, the input shape of the ``encoder`` was set to ``(28, 28, 1)`` as well as for the output shape of the ``decoder``.
 
 ## Dataset
-`Fashion-MNIST` is a dataset of [Zalando](https://jobs.zalando.com/tech/) 's article images—consisting of a training set of 60,000 examples and a test set of 10,000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes. We intend `Fashion-MNIST` to serve as a direct **drop-in replacement** for the original [MNIST dataset](http://yann.lecun.com/exdb/mnist/) for benchmarking machine learning algorithms. It shares the same image size and structure of training and testing splits.
+`Fashion-MNIST` is a dataset of [Zalando](https://jobs.zalando.com/tech/) 's article images—consisting of a training set of 60,000 examples and a test set of 10,000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes. `Fashion-MNIST` is intended to serve as a direct **drop-in replacement** for the original [MNIST dataset](http://yann.lecun.com/exdb/mnist/) for benchmarking machine learning algorithms. It shares the same image size and structure of training and testing splits. [[3]](https://github.com/zalandoresearch/fashion-mnist)
 ## Scripts
 
 * ``conv_autoencoder.py``: contains the implementation of a Convolutional Autoencoder and a Convolutional Variational Autoencoder.
