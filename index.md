@@ -1,6 +1,6 @@
-# **Image Generation Using Convolutional Autoencoder**
+# **Image Generation Using Convolutional Autoencoders**
 
-## **Autoencoders**
+## **What is an Autoencoder?**
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/wiguider/Image-Generation-Using-Convolutional-Autoencoder/main/images/autoencoder_schema.jpeg">
@@ -10,7 +10,7 @@
 
 An **autoencoder** is a neural network that is trained to attempt to copy its input to its output. Internally, it has a hidden layer ***h*** that describes a **code** used to represent the input. The network may be viewed as consisting of two parts: an ``encoder`` function ***h***=*f(***x***)* and a ``decoder`` that produces a reconstruction r=*g*(***h***). If an autoencoder succeeds in simply learning to set *g(f(***x***))* = ***x*** everywhere, then it is not especially useful. Instead, autoencoders are designed to be unable to learn to copy perfectly. Usually they are restricted in ways that allow them to copy only approximately, and to copy only input that resembles the training data. Because the model is forced to prioritize which aspects of the input should be copied, it often learns useful properties of the data. [[1]](https://www.deeplearningbook.org/)
 
-## **Variational Autoencoders**
+## **What is a Variational Autoencoder?**
 
 Variational Autoencoders extend the core concept of Autoencoders by placing constraints on how the identity map is learned. These constraints result in VAEs characterizing the lower-dimensional space, called the latent space, well enough that they are useful for data generation. VAEs characterize the latent space as a landscape of salient features seen in the training data, rather than as a simple embedding space for data as AEs do. [[2]](https://hackernoon.com/an-introduction-to-variational-autoencoders-using-keras)
 ## **Image Autoencoder**
@@ -24,8 +24,9 @@ This project introduces an example of a ``convolutional (variational) autoencode
 The autoencoder is implemented using the [Keras](https://keras.io/), and it is based on convolutional neural networks leveraging [Conv2D](https://keras.io/api/layers/convolution_layers/convolution2d/) layers in the ``encoder``, and [Conv2DTranspose](https://keras.io/api/layers/convolution_layers/convolution2d_transpose/) layers in the ``decoder``.
 The autoencoder is trained using the `Fashion-MNIST` dataset. Each image in this dataset is 28x28 pixels. For this reason, the input shape of the ``encoder`` was set to ``(28, 28, 1)`` as well as for the output shape of the ``decoder``.
 
-## Dataset
+## The Fashion-MNIST Dataset
 `Fashion-MNIST` is a dataset of [Zalando](https://jobs.zalando.com/tech/) 's article images—consisting of a training set of 60,000 examples and a test set of 10,000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes. `Fashion-MNIST` is intended to serve as a direct **drop-in replacement** for the original [MNIST dataset](http://yann.lecun.com/exdb/mnist/) for benchmarking machine learning algorithms. It shares the same image size and structure of training and testing splits. [[3]](https://github.com/zalandoresearch/fashion-mnist)
+
 ## Scripts
 
 * ``conv_autoencoder.py``: contains the implementation of a Convolutional Autoencoder and a Convolutional Variational Autoencoder.
