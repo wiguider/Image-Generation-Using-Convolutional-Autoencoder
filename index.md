@@ -1,4 +1,4 @@
-# **Image-Generation-Using-Convolutional-Autoencoder**
+# **Image Generation Using Convolutional Autoencoder**
 
 ## **Autoencoders**
 
