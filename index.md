@@ -1,6 +1,6 @@
 # **Convolutional Autoencoders for Image Reconstruction in Python and Keras**
 
-## What are Autoencoders?
+# What are Autoencoders?
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/wiguider/Image-Generation-Using-Convolutional-Autoencoder/main/images/autoencoder_schema.jpeg">
@@ -14,7 +14,7 @@ An **autoencoder** is a neural network that is trained to attempt to copy its in
 
 Variational Autoencoders extend the core concept of Autoencoders by placing constraints on how the identity map is learned. These constraints result in VAEs characterizing the lower-dimensional space, called the latent space, well enough that they are useful for data generation. VAEs characterize the latent space as a landscape of salient features seen in the training data, rather than as a simple embedding space for data as AEs do. [[2]](https://hackernoon.com/an-introduction-to-variational-autoencoders-using-keras)
 
-## About this project
+# About this project
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/wiguider/Image-Generation-Using-Convolutional-Autoencoder/main/images/Fashion-Image-Generation-Using-Convolutional-Autoencoder.png">
